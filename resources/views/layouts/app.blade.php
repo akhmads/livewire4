@@ -63,6 +63,7 @@
             {{-- MENU --}}
             <x-menu activate-by-route class="text-[13px] font-light">
                 <x-menu-item title="Home" icon="o-home" link="{{ route('home') }}" />
+                <x-menu-item title="Contact" icon="o-identification" link="{{ route('contact.index') }}" />
                 <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" />
 
                 {{-- <x-menu-sub title="Settings" icon="o-cog-6-tooth">

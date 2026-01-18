@@ -1,0 +1,144 @@
+<?php
+
+use Mary\Traits\Toast;
+use App\Models\Contact;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Livewire\Attributes\Session;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+new class extends Component {
+    use Toast, WithPagination;
+
+    #[Session(key: 'contact_per_page')]
+    public int $perPage = 10;
+
+    #[Session(key: 'contact_name')]
+    public string $name = '';
+
+    #[Session(key: 'contact_email')]
+    public string $email = '';
+
+    public int $filterCount = 0;
+    public bool $drawer = false;
+    public array $sortBy = ['column' => 'name', 'direction' => 'asc'];
+
+    public function mount(): void
+    {
+        $this->updateFilterCount();
+    }
+
+    public function headers(): array
+    {
+        return [
+            ['key' => 'name', 'label' => 'Name'],
+            ['key' => 'email', 'label' => 'Email'],
+            ['key' => 'phone', 'label' => 'Phone'],
+            ['key' => 'mobile', 'label' => 'Mobile'],
+            ['key' => 'created_at', 'label' => 'Created At', 'class' => 'lg:w-[160px]', 'format' => ['date', 'd-M-y, H:i']],
+            ['key' => 'updated_at', 'label' => 'Updated At', 'class' => 'lg:w-[160px]', 'format' => ['date', 'd-M-y, H:i']],
+        ];
+    }
+
+    public function contacts(): LengthAwarePaginator
+    {
+        return Contact::query()
+        ->orderBy(...array_values($this->sortBy))
+        ->when($this->name, fn($query) => $query->where('name', 'like', '%'.$this->name.'%'))
+        ->when($this->email, fn($query) => $query->where('email', 'like', '%'.$this->email.'%'))
+        ->paginate($this->perPage);
+    }
+
+    public function with(): array
+    {
+        return [
+            'headers' => $this->headers(),
+            'contacts' => $this->contacts(),
+        ];
+    }
+
+    public function updated($property): void
+    {
+        if (! is_array($property) && $property != "") {
+            $this->resetPage();
+            $this->updateFilterCount();
+        }
+    }
+
+    public function search(): void
+    {
+        $this->validate([
+            'name' => 'nullable',
+            'email' => 'nullable',
+        ]);
+    }
+
+    public function clear(): void
+    {
+        $this->success('Filters cleared.');
+        $this->reset(['name', 'email']);
+        $this->resetPage();
+        $this->updateFilterCount();
+        $this->drawer = false;
+    }
+
+    public function updateFilterCount(): void
+    {
+        $count = 0;
+        if (!empty($this->name)) $count++;
+        if (!empty($this->email)) $count++;
+        $this->filterCount = $count;
+    }
+
+    public function delete(Contact $contact): void
+    {
+        $contact->delete();
+        $this->success('Contact successfully deleted.');
+    }
+}; ?>
+
+<div>
+    {{-- HEADER --}}
+    <x-header title="Contact" separator progress-indicator>
+        <x-slot:actions>
+            <x-button label="Filters" @click="$wire.drawer = true" icon="o-funnel" badge="{{ $filterCount }}" />
+            <x-button label="Create" link="{{ route('contact.create') }}" icon="o-plus" class="btn-primary" />
+        </x-slot:actions>
+    </x-header>
+
+    {{-- TABLE --}}
+    <x-card wire:loading.class="bg-slate-200/50 text-slate-400" class="border border-base-300">
+        <x-table
+            :headers="$headers"
+            :rows="$contacts"
+            :sort-by="$sortBy"
+            with-pagination
+            show-empty-text
+            per-page="perPage"
+            :link="route('contact.edit', ['contact' => '[id]'])"
+        >
+            @scope('actions', $contact)
+            <div class="flex gap-0">
+                <x-button
+                    wire:click="delete({{ $contact->id }})"
+                    spinner="delete({{ $contact->id }})"
+                    wire:confirm="Are you sure you want to delete this row?"
+                    icon="o-trash"
+                    class="btn-ghost btn-sm"
+                />
+                <x-button
+                    link="{{ route('contact.edit', $contact->id) }}"
+                    icon="o-pencil-square"
+                    class="btn-ghost btn-sm"
+                />
+            </div>
+            @endscope
+        </x-table>
+    </x-card>
+
+    {{-- FILTER DRAWER --}}
+    <x-filter-drawer>
+        <x-input label="Name" wire:model="name" />
+        <x-input label="Email" wire:model="email" />
+    </x-filter-drawer>
+</div>
