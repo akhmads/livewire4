@@ -4,12 +4,12 @@ namespace App\Providers;
 
 use App\Models\User;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
@@ -48,7 +48,7 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         // Gate authorization
-        Gate::before(function(User $user, string $ability) {
+        Gate::before(function (User $user, string $ability) {
             return true;
         });
 

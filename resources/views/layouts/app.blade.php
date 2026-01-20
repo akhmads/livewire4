@@ -35,6 +35,11 @@
         <x-slot:actions>
             <div class="flex items-center gap-0.5 py-1">
                 <x-theme-toggle class="btn btn-ghost btn-sm" />
+
+                @if (view()->exists('components.notification-bell'))
+                    <livewire:notification-bell />
+                @endif
+
                 @if($user = auth()->user())
                 <x-dropdown>
                     <x-slot:trigger>
@@ -65,6 +70,11 @@
                 <x-menu-item title="Home" icon="o-home" link="{{ route('home') }}" />
                 <x-menu-item title="Contact" icon="o-identification" link="{{ route('contact.index') }}" />
                 <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" />
+
+                <x-menu-sub title="Jobs" icon="o-bolt">
+                    <x-menu-item title="Queue Jobs" link="{{ route('jobs.queue') }}" />
+                    <x-menu-item title="Failed Jobs" link="{{ route('jobs.failed') }}" />
+                </x-menu-sub>
 
                 {{-- <x-menu-sub title="Settings" icon="o-cog-6-tooth">
                     <x-menu-item title="Wifi" icon="o-wifi" link="####" />

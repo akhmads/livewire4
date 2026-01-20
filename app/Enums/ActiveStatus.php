@@ -9,8 +9,7 @@ enum ActiveStatus: string
 
     public function color(): string
     {
-        return match($this)
-        {
+        return match ($this) {
             self::Active => 'badge-success text-white',
             self::Inactive => 'badge-error text-white',
         };
@@ -30,6 +29,7 @@ enum ActiveStatus: string
             $array[$index]['name'] = $case->name;
             $index++;
         }
+
         return $array;
     }
 }

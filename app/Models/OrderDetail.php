@@ -11,6 +11,7 @@ class OrderDetail extends Model
     use Filterable;
 
     protected $table = 'order_details';
+
     protected $guarded = [];
 
     public function product(): BelongsTo

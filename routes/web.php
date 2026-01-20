@@ -11,6 +11,9 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/users/profile', 'pages::users.profile')->name('users.profile');
     Route::livewire('/users/2fa', 'pages::users.2fa')->name('users.2fa');
 
+    Route::livewire('/jobs/queue', 'pages::jobs.queue')->name('jobs.queue');
+    Route::livewire('/jobs/failed', 'pages::jobs.failed')->name('jobs.failed');
+
     Route::livewire('/contact', 'pages::contact.index')->name('contact.index');
     Route::livewire('/contact/create', 'pages::contact.create')->name('contact.create');
     Route::livewire('/contact/{contact}/edit', 'pages::contact.edit')->name('contact.edit');

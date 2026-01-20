@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 trait Filterable
 {
@@ -17,7 +17,7 @@ trait Filterable
     #[Scope]
     public function filterWhere(Builder $query, string $column, ?string $keyword, string $operator = '='): void
     {
-        if ($keyword != "") {
+        if ($keyword != '') {
             $query->where($column, $operator, $keyword);
         }
     }
@@ -25,7 +25,7 @@ trait Filterable
     #[Scope]
     public function orFilterWhere(Builder $query, string $column, ?string $keyword, string $operator = '='): void
     {
-        if ($keyword != "") {
+        if ($keyword != '') {
             $query->orWhere($column, $operator, $keyword);
         }
     }
@@ -33,35 +33,35 @@ trait Filterable
     #[Scope]
     public function filterLike(Builder $query, string $column, ?string $keyword): void
     {
-        if ($keyword != "") {
-            $query->where(DB::raw("LOWER($column)"), 'like', "%".strtolower($keyword)."%");
+        if ($keyword != '') {
+            $query->where(DB::raw("LOWER($column)"), 'like', '%'.strtolower($keyword).'%');
         }
     }
 
     #[Scope]
     public function orFilterLike(Builder $query, string $column, ?string $keyword): void
     {
-        if ($keyword != "") {
-            $query->orWhere(DB::raw("LOWER($column)"), 'like', "%".strtolower($keyword)."%");
+        if ($keyword != '') {
+            $query->orWhere(DB::raw("LOWER($column)"), 'like', '%'.strtolower($keyword).'%');
         }
     }
 
     #[Scope]
     public function isActive(Builder $query): void
     {
-        $query->where($this->getTable() . '.is_active', true);
+        $query->where($this->getTable().'.is_active', true);
     }
 
     #[Scope]
     public function notActive(Builder $query): void
     {
-        $query->where($this->getTable() . '.is_active', false);
+        $query->where($this->getTable().'.is_active', false);
     }
 
     #[Scope]
     public function active(Builder $query, ?string $keyword, string $column = 'is_active'): void
     {
-        if ($keyword != "") {
+        if ($keyword != '') {
             $keyword = $keyword == 'active' ? true : false;
             $query->where($column, $keyword);
         }
@@ -70,7 +70,7 @@ trait Filterable
     #[Scope]
     public function filterBetween(Builder $query, string $column, string $start, string $end): void
     {
-        if (($start != "") AND ($end != "")) {
+        if (($start != '') and ($end != '')) {
             $query->whereBetween($column, [$start, $end]);
         }
     }
@@ -78,7 +78,7 @@ trait Filterable
     #[Scope]
     public function orFilterBetween(Builder $query, string $column, string $start, string $end): void
     {
-        if (($start != "") AND ($end != "")) {
+        if (($start != '') and ($end != '')) {
             $query->OrWhereBetween($column, [$start, $end]);
         }
     }
@@ -86,8 +86,7 @@ trait Filterable
     #[Scope]
     public function filterWhereHas($query, $relation, $related): void
     {
-        if ( ! empty($related->id) )
-        {
+        if (! empty($related->id)) {
             $query->whereHas(
                 $relation,
                 function ($query) use ($related) {
@@ -100,8 +99,7 @@ trait Filterable
     #[Scope]
     public function orFilterWhereHas($query, $relation, $related): void
     {
-        if ( ! empty($related->id) )
-        {
+        if (! empty($related->id)) {
             $query->OrWhereHas(
                 $relation,
                 function ($query) use ($related) {
