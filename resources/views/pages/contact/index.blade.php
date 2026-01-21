@@ -101,6 +101,7 @@ new class extends Component {
     {{-- HEADER --}}
     <x-header title="Contact" separator progress-indicator>
         <x-slot:actions>
+            <livewire:import.contact lazy />
             <x-button label="Filters" @click="$wire.drawer = true" icon="o-funnel" badge="{{ $filterCount }}" />
             <x-button label="Create" link="{{ route('contact.create') }}" icon="o-plus" class="btn-primary" />
         </x-slot:actions>

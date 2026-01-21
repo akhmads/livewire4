@@ -63,23 +63,24 @@ new class extends Component
 
     {{-- IMPORT MODAL --}}
     <x-modal wire:model="importModal">
-        <div class="p-6">
-            <h2 class="text-lg font-semibold mb-4">Import Contacts</h2>
+        <x-form wire:submit="import">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold mb-4">Import Contacts</h2>
 
-            <p class="text-sm text-gray-600 mb-4">
-                Upload an Excel or CSV file with columns: name, email, phone, mobile, address<br />
-                <a href="{{ route('contacts.template.download') }}" class="text-blue-500 underline">Download Template</a>
-            </p>
+                <p class="text-sm text-gray-600 mb-4">
+                    Upload an Excel or CSV file with columns: name, email, phone, mobile, address.<br />
+                    <a href="{{ route('contacts.template.download') }}" class="text-blue-500 underline">Download Template</a>
+                </p>
 
-            <x-file
-                wire:model="importFile"
-                label="Select File"
-                accept=".xlsx,.xls,.csv"
-                wire:loading.attr="disabled"
-                x-bind:disabled="uploading"
-            />
-
-            <div class="flex justify-end mt-6">
+                <x-file
+                    wire:model="importFile"
+                    label="Select File"
+                    accept=".xlsx,.xls,.csv"
+                    wire:loading.attr="disabled"
+                    x-bind:disabled="uploading"
+                />
+            </div>
+            <x-slot:actions>
                 <x-button
                     label="Cancel"
                     @click="$wire.importModal = false"
@@ -89,13 +90,13 @@ new class extends Component
                 />
                 <x-button
                     label="Import"
-                    wire:click="import"
+                    type="submit"
                     spinner="import"
                     class="btn-primary"
                     x-bind:disabled="uploading"
                     wire:loading.attr="disabled"
                 />
-            </div>
-        </div>
+            </x-slot:actions>
+        </x-form>
     </x-modal>
 </div>
