@@ -5,6 +5,7 @@ use App\Models\Contact;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Session;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 new class extends Component {
@@ -25,6 +26,7 @@ new class extends Component {
 
     public function mount(): void
     {
+        Gate::authorize('contacts.view');
         $this->updateFilterCount();
     }
 
@@ -92,6 +94,7 @@ new class extends Component {
 
     public function delete(Contact $contact): void
     {
+        $this->authorize('delete contacts');
         $contact->delete();
         $this->success('Contact successfully deleted.');
     }
@@ -103,7 +106,9 @@ new class extends Component {
         <x-slot:actions>
             <livewire:import.contact lazy />
             <x-button label="Filters" @click="$wire.drawer = true" icon="o-funnel" badge="{{ $filterCount }}" />
+            @can('contacts.create')
             <x-button label="Create" link="{{ route('contact.create') }}" icon="o-plus" class="btn-primary" />
+            @endcan
         </x-slot:actions>
     </x-header>
 
@@ -120,6 +125,7 @@ new class extends Component {
         >
             @scope('actions', $contact)
             <div class="flex gap-0">
+                @can('contacts.delete')
                 <x-button
                     wire:click="delete({{ $contact->id }})"
                     spinner="delete({{ $contact->id }})"
@@ -127,11 +133,14 @@ new class extends Component {
                     icon="o-trash"
                     class="btn-ghost btn-sm"
                 />
+                @endcan
+                @can('contacts.edit')
                 <x-button
                     link="{{ route('contact.edit', $contact->id) }}"
                     icon="o-pencil-square"
                     class="btn-ghost btn-sm"
                 />
+                @endcan
             </div>
             @endscope
         </x-table>

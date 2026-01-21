@@ -21,8 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function (User $user, string $ability) {
-            return true;
+        // Super-admin bypass - dapat akses semua
+        Gate::before(function (User $user) {
+            if ($user->hasRole('super-admin')) {
+                return true;
+            }
         });
     }
 }

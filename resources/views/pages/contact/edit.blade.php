@@ -3,6 +3,7 @@
 use Livewire\Component;
 use Mary\Traits\Toast;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Gate;
 
 new class extends Component {
     use Toast;
@@ -17,6 +18,7 @@ new class extends Component {
 
     public function mount(): void
     {
+        Gate::authorize('contacts.edit');
         $this->fill($this->contact);
     }
 

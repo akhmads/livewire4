@@ -71,15 +71,16 @@
                 <x-menu-item title="Contact" icon="o-identification" link="{{ route('contact.index') }}" />
                 <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" />
 
-                <x-menu-sub title="Jobs" icon="o-bolt">
-                    <x-menu-item title="Queue Jobs" link="{{ route('jobs.queue') }}" />
-                    <x-menu-item title="Failed Jobs" link="{{ route('jobs.failed') }}" />
+                <x-menu-sub title="Queue Monitor" icon="o-bolt">
+                    <x-menu-item title="Job History" icon="o-queue-list" link="{{ route('queue.jobs') }}" />
+                    <x-menu-item title="Failed Jobs" icon="o-x-circle" link="{{ route('queue.failed') }}" />
                 </x-menu-sub>
 
-                {{-- <x-menu-sub title="Settings" icon="o-cog-6-tooth">
-                    <x-menu-item title="Wifi" icon="o-wifi" link="####" />
-                    <x-menu-item title="Archives" icon="o-archive-box" link="####" />
-                </x-menu-sub> --}}
+                <x-menu-sub title="Access Control" icon="o-shield-check">
+                    <x-menu-item title="Permissions" icon="o-key" link="{{ route('permissions.index') }}" />
+                    <x-menu-item title="Roles" icon="o-user-group" link="{{ route('roles.index') }}" />
+                    <x-menu-item title="User Roles" icon="o-identification" link="{{ route('user-roles.index') }}" />
+                </x-menu-sub>
             </x-menu>
         </x-slot:sidebar>
 
