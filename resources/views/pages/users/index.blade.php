@@ -135,12 +135,22 @@ new class extends Component {
                 <x-badge :value="$user->is_active->name" class="{{ $user->is_active->color() }}" />
             @endscope
             @scope('actions', $user)
-            <div class="flex gap-1.5">
+            <div class="flex gap-0">
                 @can('delete users')
-                <x-button wire:click="delete({{ $user->id }})" spinner="delete({{ $user->id }})" wire:confirm="Are you sure you want to delete this row?" icon="o-trash" class="btn btn-sm" />
+                <x-button
+                    wire:click="delete({{ $user->id }})"
+                    spinner="delete({{ $user->id }})"
+                    wire:confirm="Are you sure you want to delete this row?"
+                    icon="o-trash"
+                    class="btn-ghost btn-sm"
+                />
                 @endcan
                 @can('update users')
-                <x-button link="{{ route('users.edit', $user->id) }}" icon="o-pencil-square" class="btn btn-sm" />
+                <x-button
+                    link="{{ route('users.edit', $user->id) }}"
+                    icon="o-pencil-square"
+                    class="btn-ghost btn-sm"
+                />
                 @endcan
             </div>
             @endscope
