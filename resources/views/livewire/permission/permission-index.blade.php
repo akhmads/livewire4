@@ -62,8 +62,8 @@
                                 <td class="text-sm text-gray-500">
                                     {{ $permission->created_at->format('d M Y, H:i') }}
                                 </td>
-                                <td class="text-right">
-                                    <div class="flex justify-end gap-1">
+                                <td class="text-right py-0">
+                                    <div class="flex justify-end gap-0">
                                         @can('permissions.edit')
                                         <x-button
                                             icon="o-pencil"

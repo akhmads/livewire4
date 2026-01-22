@@ -94,7 +94,7 @@
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    @can('userRoles.manage')
+                                    @can('user-roles.assign')
                                     <x-button
                                         icon="o-shield-check"
                                         label="Assign Roles"

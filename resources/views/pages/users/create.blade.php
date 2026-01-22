@@ -23,7 +23,7 @@ new class extends Component {
 
     public function mount(): void
     {
-        Gate::authorize('create users');
+        Gate::authorize('users.create');
     }
 
     public function save(): void

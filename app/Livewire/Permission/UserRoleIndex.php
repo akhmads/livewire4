@@ -35,7 +35,7 @@ class UserRoleIndex extends Component
 
     public function mount(): void
     {
-        Gate::authorize('userRoles.view');
+        Gate::authorize('user-roles.view');
     }
 
     public function updatingSearch()
@@ -65,7 +65,7 @@ class UserRoleIndex extends Component
 
     public function save()
     {
-        $this->authorize('manage user roles');
+        Gate::authorize('user-roles.assign');
         $user = User::findOrFail($this->userId);
         $roles = Role::whereIn('id', $this->selectedRoles)->get();
         $user->syncRoles($roles);
@@ -76,6 +76,7 @@ class UserRoleIndex extends Component
 
     public function removeRole($userId, $roleId)
     {
+        Gate::authorize('user-roles.assign');
         $user = User::findOrFail($userId);
         $role = Role::findOrFail($roleId);
         $user->removeRole($role);

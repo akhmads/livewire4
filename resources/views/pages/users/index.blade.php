@@ -31,7 +31,7 @@ new class extends Component {
 
     public function mount(): void
     {
-        Gate::authorize('view users');
+        Gate::authorize('users.view');
     }
 
     public function headers(): array
@@ -100,7 +100,7 @@ new class extends Component {
 
     public function delete(User $user): void
     {
-        Gate::authorize('delete users');
+        Gate::authorize('users.delete');
         $user->delete();
         $this->success("User successfully deleted.");
     }
@@ -111,7 +111,7 @@ new class extends Component {
     <x-header title="Users" separator progress-indicator>
         <x-slot:actions>
             <x-button label="Filters" @click="$wire.drawer = true" responsive icon="o-funnel" badge="{{ $filterCount }}" />
-            @can('create users')
+            @can('users.create')
             <x-button label="Create" link="{{ route('users.create') }}" responsive icon="o-plus" class="btn-primary" />
             @endcan
         </x-slot:actions>
@@ -126,7 +126,7 @@ new class extends Component {
             with-pagination
             per-page="perPage"
             show-empty-text
-            :link="auth()->user()->can('update users') ? route('users.edit', ['user' => '[id]']) : null"
+            :link="auth()->user()->can('users.edit') ? route('users.edit', ['user' => '[id]']) : null"
         >
             @scope('cell_avatar', $user)
             <x-avatar image="{{ $user->avatar ?? asset('assets/img/default-avatar.png') }}" class="w-6" />
@@ -136,7 +136,7 @@ new class extends Component {
             @endscope
             @scope('actions', $user)
             <div class="flex gap-0">
-                @can('delete users')
+                @can('users.delete')
                 <x-button
                     wire:click="delete({{ $user->id }})"
                     spinner="delete({{ $user->id }})"
@@ -145,7 +145,7 @@ new class extends Component {
                     class="btn-ghost btn-sm"
                 />
                 @endcan
-                @can('update users')
+                @can('users.edit')
                 <x-button
                     link="{{ route('users.edit', $user->id) }}"
                     icon="o-pencil-square"

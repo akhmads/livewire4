@@ -48,9 +48,9 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         // Gate authorization
-        Gate::before(function (User $user, string $ability) {
-            return true;
-        });
+        // Gate::before(function (User $user, string $ability) {
+        //     return true;
+        // });
 
         // Commented out site meta configuration
         // if( ! app()->runningInConsole()) {

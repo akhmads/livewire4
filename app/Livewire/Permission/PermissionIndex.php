@@ -19,7 +19,7 @@ class PermissionIndex extends Component
     use Toast, WithPagination, AuthorizesRequests;
 
     public $search = '';
-    public $perPage = 15;
+    public $perPage = 10;
 
     // Form
     public $showModal = false;

@@ -26,7 +26,7 @@ new class extends Component {
 
     public function mount(): void
     {
-        Gate::authorize('update users');
+        Gate::authorize('users.edit');
 
         $this->fill($this->user);
         // $this->role = $this->user->getRoleNames()->first();

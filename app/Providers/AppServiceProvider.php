@@ -16,16 +16,16 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Super-admin bypass - dapat akses semua
-        Gate::before(function (User $user) {
+        // Super admin bypass - dapat akses semua
+        Gate::before(function (User $user, string $ability) {
             if ($user->hasRole('super-admin')) {
                 return true;
             }
+
+            // Penting: return null agar Gate lanjut ke Spatie/laravel-permission
+            return null;
         });
     }
 }

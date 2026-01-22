@@ -11,13 +11,12 @@ use Livewire\Attributes\Computed;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 #[Layout('layouts.app')]
 #[Title('Role Management')]
 class RoleIndex extends Component
 {
-    use Toast, WithPagination, AuthorizesRequests;
+    use Toast, WithPagination;
 
     public $search = '';
     public $perPage = 15;
