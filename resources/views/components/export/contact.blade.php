@@ -29,7 +29,7 @@ new class extends Component
 
 @placeholder
 <div>
-    <x-button label="Export" icon="o-document-arrow-down" />
+    <x-button label="Export" icon="o-document-arrow-down" class="opacity-40" />
 </div>
 @endplaceholder
 

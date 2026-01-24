@@ -47,7 +47,7 @@ new class extends Component
 
 @placeholder
 <div>
-    <x-button label="Loading..." class="" />
+    <x-button label="Import" responsive icon="o-document-arrow-up" class="opacity-40" />
 </div>
 @endplaceholder
 

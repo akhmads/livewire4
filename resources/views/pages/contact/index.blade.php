@@ -104,8 +104,12 @@ new class extends Component {
     {{-- HEADER --}}
     <x-header title="Contact" separator progress-indicator>
         <x-slot:actions>
+            @can('contacts.export')
             <livewire:export.contact lazy />
+            @endcan
+            @can('contacts.import')
             <livewire:import.contact lazy />
+            @endcan
             <x-button label="Filters" @click="$wire.drawer = true" icon="o-funnel" badge="{{ $filterCount }}" />
             @can('contacts.create')
             <x-button label="Create" link="{{ route('contact.create') }}" icon="o-plus" class="btn-primary" />
