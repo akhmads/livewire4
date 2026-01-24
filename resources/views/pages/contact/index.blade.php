@@ -104,6 +104,7 @@ new class extends Component {
     {{-- HEADER --}}
     <x-header title="Contact" separator progress-indicator>
         <x-slot:actions>
+            <livewire:export.contact lazy />
             <livewire:import.contact lazy />
             <x-button label="Filters" @click="$wire.drawer = true" icon="o-funnel" badge="{{ $filterCount }}" />
             @can('contacts.create')
@@ -121,7 +122,7 @@ new class extends Component {
             with-pagination
             show-empty-text
             per-page="perPage"
-            :link="route('contact.edit', ['contact' => '[id]'])"
+            :link="auth()->user()->can('contacts.edit') ? route('contact.edit', ['contact' => '[id]']) : null"
         >
             @scope('actions', $contact)
             <div class="flex gap-0">
