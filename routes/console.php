@@ -10,4 +10,7 @@ Artisan::command('inspire', function () {
 Schedule::command('queue:work --stop-when-empty')
     ->environments(['production'])
     ->everyMinute()
-    ->withoutOverlapping();
+    ->withoutOverlapping(10)
+    ->then(function () {
+        Log::info('Database queue worker executed successfully.');
+    });
