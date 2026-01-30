@@ -1,12 +1,12 @@
 <div>
     {{-- Header Section --}}
-    <x-header title="Failed Jobs" subtitle="Monitor dan kelola job yang gagal dijalankan" separator>
+    <x-header title="Failed Jobs" subtitle="Monitor and manage jobs that failed to execute" separator>
         <x-slot:actions>
             @if($totalFailed > 0)
                 <x-button
                     icon="o-arrow-path"
                     wire:click="retryAll"
-                    wire:confirm="Apakah Anda yakin ingin retry semua failed jobs?"
+                    wire:confirm="Are you sure you want to retry all failed jobs?"
                     spinner
                     class="btn-warning btn-sm"
                     label="Retry All"
@@ -14,7 +14,7 @@
                 <x-button
                     icon="o-trash"
                     wire:click="flushAll"
-                    wire:confirm="Apakah Anda yakin ingin menghapus semua failed jobs? Tindakan ini tidak dapat dibatalkan."
+                    wire:confirm="Are you sure you want to delete all failed jobs? This action cannot be undone."
                     spinner
                     class="btn-error btn-sm"
                     label="Flush All"
@@ -49,7 +49,7 @@
                 <x-input
                     wire:model.live.debounce.300ms="search"
                     icon="o-magnifying-glass"
-                    placeholder="Cari job, queue, atau exception..."
+                    placeholder="Search job, queue, or exception..."
                     clearable
                 />
             </div>
@@ -114,7 +114,7 @@
                                         <x-button
                                             icon="o-arrow-path"
                                             wire:click="retryJob({{ $job->id }})"
-                                            wire:confirm="Apakah Anda yakin ingin retry job ini?"
+                                            wire:confirm="Are you sure you want to retry this job?"
                                             spinner
                                             class="btn-ghost btn-sm text-warning"
                                             tooltip="Retry Job"
@@ -122,7 +122,7 @@
                                         <x-button
                                             icon="o-trash"
                                             wire:click="deleteJob({{ $job->id }})"
-                                            wire:confirm="Apakah Anda yakin ingin menghapus job ini?"
+                                            wire:confirm="Are you sure you want to delete this job?"
                                             spinner
                                             class="btn-ghost btn-sm text-error"
                                             tooltip="Delete Job"
@@ -142,12 +142,12 @@
         @else
             <div class="py-12 text-center">
                 <x-icon name="o-check-circle" class="w-16 h-16 mx-auto mb-4 text-success" />
-                <h3 class="mb-2 text-lg font-medium text-gray-900">Tidak ada failed jobs</h3>
+                <h3 class="mb-2 text-lg font-medium text-gray-900">No failed jobs</h3>
                 <p class="text-gray-500">
                     @if($search)
-                        Tidak ada failed jobs yang sesuai dengan filter Anda
+                        No failed jobs match your filters
                     @else
-                        Bagus! Tidak ada job yang gagal
+                        Great! No jobs have failed
                     @endif
                 </p>
             </div>

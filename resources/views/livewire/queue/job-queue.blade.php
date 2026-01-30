@@ -1,12 +1,12 @@
 <div>
     {{-- Header Section --}}
-    <x-header title="Job History" subtitle="Riwayat semua job yang pernah dijalankan beserta status dan durasi eksekusi" separator>
+    <x-header title="Job History" subtitle="History of all jobs that have been executed along with their status and execution duration" separator>
         <x-slot:actions>
             @if($stats['total'] > 0)
                 <x-button
                     icon="o-trash"
                     wire:click="clearCompletedLogs"
-                    wire:confirm="Hapus semua completed logs? Tindakan ini tidak dapat dibatalkan."
+                    wire:confirm="Delete all completed logs? This action cannot be undone."
                     spinner
                     class="btn-ghost btn-sm"
                     tooltip="Clear Completed"
@@ -14,7 +14,7 @@
                 <x-button
                     icon="o-trash"
                     wire:click="clearAllLogs"
-                    wire:confirm="Hapus SEMUA logs? Tindakan ini tidak dapat dibatalkan."
+                    wire:confirm="Delete ALL logs? This action cannot be undone."
                     spinner
                     class="btn-error btn-sm"
                     tooltip="Clear All"
@@ -51,21 +51,21 @@
             :value="$stats['completed']"
             icon="o-check-circle"
             color="text-success"
-            tooltip="Jobs yang berhasil selesai"
+            tooltip="Jobs that completed successfully"
         />
         <x-stat
             title="Failed"
             :value="$stats['failed']"
             icon="o-x-circle"
             color="text-error"
-            tooltip="Jobs yang gagal"
+            tooltip="Jobs that failed"
         />
         <x-stat
-            title="Rata-rata Durasi"
+            title="Average Duration"
             :value="$stats['avg_duration']"
             icon="o-clock"
             color="text-warning"
-            tooltip="Rata-rata durasi eksekusi job"
+            tooltip="Average job execution duration"
         />
     </div>
 
@@ -77,7 +77,7 @@
                 <x-input
                     wire:model.live.debounce.300ms="search"
                     icon="o-magnifying-glass"
-                    placeholder="Cari nama job, ID, atau pesan error..."
+                    placeholder="Search job name, ID, or error message..."
                     clearable
                 />
             </div>
@@ -86,11 +86,11 @@
             <div class="w-full md:w-40">
                 @php
                     $dateOptions = [
-                        ['id' => 'all', 'name' => 'Semua Waktu'],
-                        ['id' => 'today', 'name' => 'Hari Ini'],
-                        ['id' => 'yesterday', 'name' => 'Kemarin'],
-                        ['id' => 'week', 'name' => 'Minggu Ini'],
-                        ['id' => 'month', 'name' => 'Bulan Ini'],
+                        ['id' => 'all', 'name' => 'All Time'],
+                        ['id' => 'today', 'name' => 'Today'],
+                        ['id' => 'yesterday', 'name' => 'Yesterday'],
+                        ['id' => 'week', 'name' => 'This Week'],
+                        ['id' => 'month', 'name' => 'This Month'],
                     ];
                 @endphp
                 <x-select
@@ -216,7 +216,7 @@
                                         <x-button
                                             icon="o-trash"
                                             wire:click="deleteJob({{ $job->id }})"
-                                            wire:confirm="Apakah Anda yakin ingin menghapus log ini?"
+                                            wire:confirm="Are you sure you want to delete this log?"
                                             spinner
                                             class="btn-ghost btn-sm text-error"
                                             tooltip="Delete Log"
@@ -236,12 +236,12 @@
         @else
             <div class="py-12 text-center">
                 <x-icon name="o-queue-list" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">Tidak ada job history</h3>
+                <h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">No job history</h3>
                 <p class="text-gray-500">
                     @if($search || $statusFilter !== 'all' || $dateRange !== 'all')
-                        Tidak ada job yang sesuai dengan filter Anda
+                        No jobs match your filters
                     @else
-                        Belum ada job yang pernah dijalankan
+                        No jobs have been executed yet
                     @endif
                 </p>
             </div>
