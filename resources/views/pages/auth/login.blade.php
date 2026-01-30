@@ -29,8 +29,8 @@ new #[Layout('layouts.auth')] class extends Component {
         }
 
         if (app()->environment('local')) {
-            $this->email = 'admin@gmail.com';
-            $this->password = 'q1w2e3r4';
+            $this->email = 'admin@admin.com';
+            $this->password = 'admin123';
             $this->remember = true;
         }
     }
