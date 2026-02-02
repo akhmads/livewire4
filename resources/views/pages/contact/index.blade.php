@@ -37,8 +37,8 @@ new class extends Component {
             ['key' => 'email', 'label' => 'Email'],
             ['key' => 'phone', 'label' => 'Phone'],
             ['key' => 'mobile', 'label' => 'Mobile'],
-            ['key' => 'created_at', 'label' => 'Created At', 'class' => 'lg:w-[160px]', 'format' => ['date', 'd-M-y, H:i']],
-            ['key' => 'updated_at', 'label' => 'Updated At', 'class' => 'lg:w-[160px]', 'format' => ['date', 'd-M-y, H:i']],
+            ['key' => 'created_at', 'label' => 'Created At', 'class' => 'lg:w-[200px]'],
+            ['key' => 'updated_at', 'label' => 'Updated At', 'class' => 'lg:w-[200px]'],
         ];
     }
 
@@ -147,6 +147,12 @@ new class extends Component {
                 />
                 @endcan
             </div>
+            @endscope
+            @scope('cell_created_at', $contact)
+                {{ $contact->created_at ? \Carbon\Carbon::parse($contact->created_at)->setTimezone(auth()->user()->timezone ?? 'UTC')->translatedFormat('d-M-y, H:i') : '' }}
+            @endscope
+            @scope('cell_updated_at', $contact)
+                {{ $contact->updated_at ? \Carbon\Carbon::parse($contact->updated_at)->setTimezone(auth()->user()->timezone ?? 'UTC')->translatedFormat('d-M-y, H:i') : '' }}
             @endscope
         </x-table>
     </x-card>

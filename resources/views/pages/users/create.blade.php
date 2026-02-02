@@ -9,9 +9,10 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\HasTimezoneOptions;
 
 new class extends Component {
-    use Toast, WithFileUploads;
+    use Toast, WithFileUploads, HasTimezoneOptions;
 
     public $name = '';
     public $email = '';
@@ -20,6 +21,7 @@ new class extends Component {
     public $avatar = '';
     // public $role = '';
     public $is_active = '';
+    public $timezone = 'UTC';
 
     public function mount(): void
     {
@@ -36,6 +38,7 @@ new class extends Component {
             'avatar' => 'nullable|image|max:1024',
             // 'role' => 'required',
             'is_active' => 'required',
+            'timezone' => 'required',
         ]);
 
         unset($data['avatar']);
@@ -81,6 +84,7 @@ new class extends Component {
                     </div>
                     <div class="space-y-4 lg:space-y-0 lg:grid grid-cols-2 gap-4">
                         {{-- <x-select label="Role" :options="\Spatie\Permission\Models\Role::get()" wire:model="role" option-value="name" option-label="name" placeholder="-- Select --" /> --}}
+                        <x-choices-offline label="Timezone" :options="$this->timezoneOptions()" wire:model="timezone" searchable single />
                         <x-select label="Is Active" :options="\App\Enums\ActiveStatus::toSelect()" wire:model="is_active" placeholder="-- Select --" />
                     </div>
                 </div>

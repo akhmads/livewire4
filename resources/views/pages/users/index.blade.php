@@ -9,9 +9,10 @@ use Livewire\Attributes\Session;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Traits\HasTimezoneOptions;
 
 new class extends Component {
-    use Toast, WithPagination;
+    use Toast, WithPagination, HasTimezoneOptions;
 
     #[Session(key: 'users_per_page')]
     public int $perPage = 10;
@@ -24,6 +25,9 @@ new class extends Component {
 
     #[Session(key: 'users_is_active')]
     public string $is_active = '';
+
+    #[Session(key: 'users_timezone')]
+    public string $timezone = '';
 
     public int $filterCount = 0;
     public bool $drawer = false;
@@ -40,6 +44,7 @@ new class extends Component {
             ['key' => 'avatar', 'label' => 'Avatar', 'sortable' => false],
             ['key' => 'name', 'label' => 'Name'],
             ['key' => 'email', 'label' => 'Email'],
+            ['key' => 'timezone', 'label' => 'Timezone'],
             ['key' => 'is_active', 'label' => 'Is Active'],
         ];
     }
@@ -50,6 +55,7 @@ new class extends Component {
         ->orderBy(...array_values($this->sortBy))
         ->filterLike('name', $this->name)
         ->filterLike('email', $this->email)
+        ->filterLike('timezone', $this->timezone)
         ->filterWhere('is_active', $this->is_active);
 
         return $user->paginate($this->perPage);
@@ -83,7 +89,7 @@ new class extends Component {
     public function clear(): void
     {
         $this->success('Filters cleared.');
-        $this->reset(['name','email','is_active']);
+        $this->reset(['name','email','timezone','is_active']);
         $this->resetPage();
         $this->updateFilterCount();
         $this->drawer = false;
@@ -94,6 +100,7 @@ new class extends Component {
         $count = 0;
         if (!empty($this->name)) $count++;
         if (!empty($this->email)) $count++;
+        if (!empty($this->timezone)) $count++;
         if (!empty($this->is_active)) $count++;
         $this->filterCount = $count;
     }
@@ -134,6 +141,9 @@ new class extends Component {
             @scope('cell_is_active', $user)
                 <x-badge :value="$user->is_active->name" class="{{ $user->is_active->color() }}" />
             @endscope
+            @scope('cell_timezone', $user)
+                {{ $user->timezone }}
+            @endscope
             @scope('actions', $user)
             <div class="flex gap-0">
                 @can('users.delete')
@@ -161,6 +171,7 @@ new class extends Component {
     <x-filter-drawer>
         <x-input label="Name" wire:model="name" />
         <x-input label="Email" wire:model="email" />
+        <x-choices-offline label="Timezone" :options="$this->timezoneFilterOptions()" wire:model="timezone" searchable />
         <x-select label="Is Active" wire:model="is_active" :options="\App\Enums\ActiveStatus::toSelect()" placeholder="-- All --" />
     </x-filter-drawer>
 </div>
