@@ -32,6 +32,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'contacts.import', 'group' => 'Contacts'],
             ['name' => 'contacts.export', 'group' => 'Contacts'],
 
+            // Product Management
+            ['name' => 'products.view', 'group' => 'Products'],
+            ['name' => 'products.create', 'group' => 'Products'],
+            ['name' => 'products.edit', 'group' => 'Products'],
+            ['name' => 'products.delete', 'group' => 'Products'],
+
             // Queue Management
             ['name' => 'queue.view', 'group' => 'Queue'],
             ['name' => 'queue.retry', 'group' => 'Queue'],
@@ -82,6 +88,7 @@ class PermissionSeeder extends Seeder
         $editorPermissions = Permission::whereIn('name', [
             'users.view',
             'contacts.view', 'contacts.create', 'contacts.edit',
+            'products.view', 'products.create', 'products.edit',
             'queue.view',
         ])->get();
         $editor->syncPermissions($editorPermissions);

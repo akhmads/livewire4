@@ -18,7 +18,7 @@ class Product extends Model
     {
         return [
             'price' => 'decimal:2',
-            'is_active' => ActiveStatus::class,
+            'is_active' => 'boolean',
         ];
     }
 }

@@ -68,7 +68,8 @@
             {{-- MENU --}}
             <x-menu activate-by-route class="text-[13px] font-light">
                 <x-menu-item title="Home" icon="o-home" link="{{ route('home') }}" />
-                <x-menu-item title="Contact" icon="o-identification" link="{{ route('contact.index') }}" :hidden="auth()->user()->cannot('contacts.view')" />
+                <x-menu-item title="Contacts" icon="o-identification" link="{{ route('contact.index') }}" :hidden="auth()->user()->cannot('contacts.view')" />
+                <x-menu-item title="Products" icon="o-cube" link="{{ route('product.index') }}" :hidden="auth()->user()->cannot('products.view')" />
                 <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" :hidden="auth()->user()->cannot('users.view')" />
 
                 <x-menu-sub title="Queue Monitor" icon="o-bolt">

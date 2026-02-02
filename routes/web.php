@@ -18,6 +18,10 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/contact/create', 'pages::contact.create')->name('contact.create');
     Route::livewire('/contact/{contact}/edit', 'pages::contact.edit')->name('contact.edit');
 
+    Route::livewire('/product', 'pages::product.index')->name('product.index');
+    Route::livewire('/product/create', 'pages::product.create')->name('product.create');
+    Route::livewire('/product/{product}/edit', 'pages::product.edit')->name('product.edit');
+
     Route::get('/queue/jobs', \App\Livewire\Queue\JobQueue::class)->name('queue.jobs');
     Route::get('/queue/failed', \App\Livewire\Queue\FailedJobs::class)->name('queue.failed');
 
