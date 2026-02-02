@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -26,5 +27,10 @@ class Order extends Model
     public function details(): HasMany
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function contact(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class)->withDefault();
     }
 }

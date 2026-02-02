@@ -38,6 +38,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'products.edit', 'group' => 'Products'],
             ['name' => 'products.delete', 'group' => 'Products'],
 
+            // Order Management
+            ['name' => 'orders.view', 'group' => 'Orders'],
+            ['name' => 'orders.create', 'group' => 'Orders'],
+            ['name' => 'orders.edit', 'group' => 'Orders'],
+            ['name' => 'orders.delete', 'group' => 'Orders'],
+
             // Queue Management
             ['name' => 'queue.view', 'group' => 'Queue'],
             ['name' => 'queue.retry', 'group' => 'Queue'],
@@ -89,6 +95,7 @@ class PermissionSeeder extends Seeder
             'users.view',
             'contacts.view', 'contacts.create', 'contacts.edit',
             'products.view', 'products.create', 'products.edit',
+            'orders.view', 'orders.create', 'orders.edit',
             'queue.view',
         ])->get();
         $editor->syncPermissions($editorPermissions);

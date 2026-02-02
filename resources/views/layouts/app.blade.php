@@ -70,6 +70,7 @@
                 <x-menu-item title="Home" icon="o-home" link="{{ route('home') }}" />
                 <x-menu-item title="Contacts" icon="o-identification" link="{{ route('contact.index') }}" :hidden="auth()->user()->cannot('contacts.view')" />
                 <x-menu-item title="Products" icon="o-cube" link="{{ route('product.index') }}" :hidden="auth()->user()->cannot('products.view')" />
+                <x-menu-item title="Orders" icon="o-shopping-cart" link="{{ route('order.index') }}" :hidden="auth()->user()->cannot('orders.view')" />
                 <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" :hidden="auth()->user()->cannot('users.view')" />
 
                 <x-menu-sub title="Queue Monitor" icon="o-bolt">

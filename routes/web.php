@@ -22,6 +22,10 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/product/create', 'pages::product.create')->name('product.create');
     Route::livewire('/product/{product}/edit', 'pages::product.edit')->name('product.edit');
 
+    Route::livewire('/order', 'pages::order.index')->name('order.index');
+    Route::livewire('/order/create', 'pages::order.create')->name('order.create');
+    Route::livewire('/order/{order}/edit', 'pages::order.edit')->name('order.edit');
+
     Route::get('/queue/jobs', \App\Livewire\Queue\JobQueue::class)->name('queue.jobs');
     Route::get('/queue/failed', \App\Livewire\Queue\FailedJobs::class)->name('queue.failed');
 
