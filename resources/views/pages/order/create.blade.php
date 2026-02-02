@@ -78,6 +78,17 @@ new class extends Component {
 
     public function save(): void
     {
+        // Check for duplicate products
+        $productIds = collect($this->details)
+            ->where('product_id', '!==', '')
+            ->pluck('product_id')
+            ->toArray();
+
+        if (count($productIds) !== count(array_unique($productIds))) {
+            $this->error('Error', 'Duplicate products are not allowed. Each product can only be ordered once.');
+            return;
+        }
+
         $this->validate([
             'code' => 'required|unique:orders,code',
             'date' => 'required|date',
@@ -125,100 +136,105 @@ new class extends Component {
     </x-header>
 
     <x-form wire:submit="save">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {{-- Order Header --}}
-            <div class="lg:col-span-1">
-                <x-card class="border border-base-300">
-                    <div class="space-y-4">
-                        <x-input label="Code" wire:model="code" />
-                        <x-input label="Date" wire:model="date" type="date" />
-                        <x-choices
-                            label="Contact"
-                            wire:model="contact_id"
-                            :options="$contacts"
-                            option-label="name"
-                            option-value="id"
-                            searchable
-                            single
-                        />
-                        <x-textarea label="Note" wire:model="note" rows="3" />
-                        <div class="pt-4 border-t">
-                            <div class="text-lg font-semibold">
-                                Total: Rp {{ number_format($total, 0, ',', '.') }}
+
+        <x-card class="border border-base-300">
+            <div class="space-y-4">
+                <div class="space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <x-input label="Code" wire:model="code" />
+                    <x-input label="Date" wire:model="date" type="date" />
+                    <x-choices
+                        label="Contact"
+                        wire:model="contact_id"
+                        :options="$contacts"
+                        option-label="name"
+                        option-value="id"
+                        searchable
+                        single
+                    />
+                    <x-textarea label="Note" wire:model="note" rows="3" />
+                </div>
+                <div class="pt-4 border-t border-t-base-300">
+                    <div class="text-lg font-semibold text-end">
+                        Total: Rp {{ number_format($total, 0, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+        </x-card>
+
+        {{-- Order Details --}}
+        <x-card class="border border-base-300">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-semibold">Order Details</h3>
+                    <x-button
+                        label="Add Item"
+                        icon="o-plus"
+                        wire:click="addDetail"
+                        spinner="addDetail"
+                        class="btn-sm btn-primary"
+                    />
+                </div>
+
+                <div class="border border-base-300 rounded-lg divide-y divide-base-300">
+                    @foreach($details as $index => $detail)
+                    <div class="px-4 pt-2 pb-4 bg-gray-50 dark:bg-base-200 first:rounded-t-lg last:rounded-b-lg">
+                        <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2">
+                            <div class="lg:col-span-5">
+                                <x-select
+                                    label="Product"
+                                    wire:model.live="details.{{ $index }}.product_id"
+                                    :options="$products"
+                                    option-label="name"
+                                    option-value="id"
+                                    placeholder="Select product"
+                                />
+                            </div>
+                            <div class="lg:col-span-2">
+                                <x-input
+                                    label="Price"
+                                    wire:model.live="details.{{ $index }}.price"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                />
+                            </div>
+                            <div class="lg:col-span-2">
+                                <x-input
+                                    label="Qty"
+                                    wire:model.live="details.{{ $index }}.qty"
+                                    type="number"
+                                    min="1"
+                                />
+                            </div>
+                            <div class="lg:col-span-2">
+                                <x-input
+                                    label="Subtotal"
+                                    wire:model.live="details.{{ $index }}.subtotal"
+                                    type="number"
+                                    min="0"
+                                    readonly
+                                />
+                            </div>
+                            <div class="flex flex-col gap-2 pt-7">
+                                @if(count($details) > 1)
+                                <x-button
+                                    icon="o-trash"
+                                    wire:click="removeDetail({{ $index }})"
+                                    class="btn-ghost btn-sm text-error"
+                                    wire:confirm="Remove this item?"
+                                />
+                                @endif
                             </div>
                         </div>
                     </div>
-                </x-card>
+                    @endforeach
+                </div>
+
+                @error('details')
+                <div class="text-sm text-error">{{ $message }}</div>
+                @enderror
             </div>
-
-            {{-- Order Details --}}
-            <div class="lg:col-span-2">
-                <x-card class="border border-base-300">
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <h3 class="font-semibold">Order Details</h3>
-                            <x-button label="Add Item" icon="o-plus" wire:click="addDetail" class="btn-sm btn-primary" />
-                        </div>
-
-                        <div class="space-y-3">
-                            @foreach($details as $index => $detail)
-                            <div class="p-4 border border-base-200 rounded-lg bg-base-50 dark:bg-base-200">
-                                <div class="flex items-start gap-3">
-                                    <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3">
-                                        <div class="md:col-span-2">
-                                            <x-select
-                                                label="Product"
-                                                wire:model.live="details.{{ $index }}.product_id"
-                                                :options="$products"
-                                                option-label="name"
-                                                option-value="id"
-                                                placeholder="Select product"
-                                            />
-                                        </div>
-                                        <div>
-                                            <x-input
-                                                label="Price"
-                                                wire:model.live="details.{{ $index }}.price"
-                                                type="number"
-                                                step="0.01"
-                                                min="0"
-                                                prefix="Rp"
-                                            />
-                                        </div>
-                                        <div>
-                                            <x-input
-                                                label="Qty"
-                                                wire:model.live="details.{{ $index }}.qty"
-                                                type="number"
-                                                min="1"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col gap-2 pt-7">
-                                        <div class="text-sm font-medium whitespace-nowrap">
-                                            Rp {{ number_format($detail['subtotal'], 0, ',', '.') }}
-                                        </div>
-                                        @if(count($details) > 1)
-                                        <x-button
-                                            icon="o-trash"
-                                            wire:click="removeDetail({{ $index }})"
-                                            class="btn-ghost btn-sm text-error"
-                                            wire:confirm="Remove this item?"
-                                        />
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-
-                        @error('details')
-                        <div class="text-sm text-error">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </x-card>
-            </div>
-        </div>
+        </x-card>
 
         <x-slot:actions>
             <x-button label="Cancel" link="{{ route('order.index') }}" />
