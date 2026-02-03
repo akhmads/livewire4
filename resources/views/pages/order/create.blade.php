@@ -5,6 +5,7 @@ use Mary\Traits\Toast;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Contact;
+use App\Enums\OrderStatus;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +16,7 @@ new class extends Component {
     public $date;
     public $note;
     public $contact_id;
+    public $status = 'new';
     public $total = 0;
 
     public $details = [];
@@ -116,6 +118,7 @@ new class extends Component {
             'code' => 'required|unique:orders,code',
             'date' => 'required|date',
             'contact_id' => 'required|exists:contacts,id',
+            'status' => 'required|in:new,processing,shipped,delivered,cancelled',
             'note' => 'nullable',
             'details' => 'required|array|min:1',
             'details.*.product_id' => 'required|exists:products,id',
@@ -133,6 +136,7 @@ new class extends Component {
                 'code' => $this->code,
                 'date' => $this->date,
                 'contact_id' => $this->contact_id,
+                'status' => $this->status,
                 'note' => $this->note,
                 'total' => $this->total,
             ]);
@@ -176,7 +180,12 @@ new class extends Component {
                             searchable
                             single
                         />
-                        <x-textarea label="Note" wire:model="note" rows="3" />
+                        <x-select
+                            label="Status"
+                            wire:model="status"
+                            :options="\App\Enums\OrderStatus::toSelect()"
+                        />
+                        <x-textarea label="Note" wire:model="note" rows="3" class="lg:col-span-2" />
                     </div>
                 </x-card>
                 <x-card class="border border-base-300">

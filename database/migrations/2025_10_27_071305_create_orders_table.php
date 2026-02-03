@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->text('note')->nullable();
             $table->decimal('total', 12, 2)->default(0);
+            $table->string('status')->default('new')->index();
             $table->timestamps();
         });
     }

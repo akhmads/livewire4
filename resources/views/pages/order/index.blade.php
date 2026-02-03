@@ -33,6 +33,7 @@ new class extends Component {
             ['key' => 'code', 'label' => 'Code'],
             ['key' => 'contact.name', 'label' => 'Contact'],
             ['key' => 'date', 'label' => 'Date'],
+            ['key' => 'status', 'label' => 'Status'],
             ['key' => 'total', 'label' => 'Total'],
             ['key' => 'created_at', 'label' => 'Created At', 'class' => 'lg:w-[200px]'],
         ];
@@ -139,6 +140,9 @@ new class extends Component {
             @endscope
             @scope('cell_date', $order)
                 {{ $order->date ? \Carbon\Carbon::parse($order->date)->translatedFormat('d-M-Y') : '' }}
+            @endscope
+            @scope('cell_status', $order)
+                <x-badge value="{{ $order->status->label() }}" class="{{ $order->status->color() }}" />
             @endscope
             @scope('cell_total', $order)
                 Rp {{ number_format($order->total, 0, ',', '.') }}

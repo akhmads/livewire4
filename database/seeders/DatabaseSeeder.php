@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         // Run permission seeder first
         $this->call(PermissionSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call(ContactSeeder::class);
 
         // User::factory(10)->create();
 
