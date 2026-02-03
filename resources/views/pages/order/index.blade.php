@@ -19,7 +19,7 @@ new class extends Component {
 
     public int $filterCount = 0;
     public bool $drawer = false;
-    public array $sortBy = ['column' => 'date', 'direction' => 'desc'];
+    public array $sortBy = ['column' => 'created_at', 'direction' => 'desc'];
 
     public function mount(): void
     {

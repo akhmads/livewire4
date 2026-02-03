@@ -25,8 +25,8 @@ new class extends Component {
     {
         Gate::authorize('orders.create');
         $this->date = now()->format('Y-m-d');
-        $this->products = Product::where('is_active', true)->orderBy('name')->get();
-        $this->contacts = Contact::orderBy('name')->get();
+        $this->searchProduct();
+        $this->searchContact();
         $this->addDetail();
     }
 
@@ -65,7 +65,9 @@ new class extends Component {
 
         // Recalculate subtotal for this detail
         if (isset($this->details[$index]['price']) && isset($this->details[$index]['qty'])) {
-            $this->details[$index]['subtotal'] = $this->details[$index]['price'] * $this->details[$index]['qty'];
+            $price = is_numeric($this->details[$index]['price']) ? (float) $this->details[$index]['price'] : 0;
+            $qty = is_numeric($this->details[$index]['qty']) ? (int) $this->details[$index]['qty'] : 0;
+            $this->details[$index]['subtotal'] = $price * $qty;
         }
 
         $this->calculateTotal();
@@ -74,6 +76,27 @@ new class extends Component {
     public function calculateTotal(): void
     {
         $this->total = collect($this->details)->sum('subtotal');
+    }
+
+    public function searchContact($value = ''): void
+    {
+        $this->contacts = Contact::query()
+            ->where('name', 'like', '%' . $value . '%')
+            ->orWhere('email', 'like', '%' . $value . '%')
+            ->orWhere('phone', 'like', '%' . $value . '%')
+            ->orderBy('name')
+            ->limit(20)
+            ->get();
+    }
+
+    public function searchProduct($value = ''): void
+    {
+        $this->products = Product::query()
+            ->where('is_active', true)
+            ->where('name', 'like', '%' . $value . '%')
+            ->orderBy('name')
+            ->limit(20)
+            ->get();
     }
 
     public function save(): void
@@ -137,29 +160,32 @@ new class extends Component {
 
     <x-form wire:submit="save">
 
-        <x-card class="border border-base-300">
-            <div class="space-y-4">
-                <div class="space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <x-input label="Code" wire:model="code" />
-                    <x-input label="Date" wire:model="date" type="date" />
-                    <x-choices
-                        label="Contact"
-                        wire:model="contact_id"
-                        :options="$contacts"
-                        option-label="name"
-                        option-value="id"
-                        searchable
-                        single
-                    />
-                    <x-textarea label="Note" wire:model="note" rows="3" />
-                </div>
-                <div class="pt-4 border-t border-t-base-300">
-                    <div class="text-lg font-semibold text-end">
-                        Total: Rp {{ number_format($total, 0, ',', '.') }}
+        <div class="space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <x-card class="col-span-2 border border-base-300">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <x-input label="Code" wire:model="code" />
+                        <x-input label="Date" wire:model="date" type="date" />
+                        <x-choices
+                            label="Contact"
+                            wire:model="contact_id"
+                            :options="$contacts"
+                            search-function="searchContact"
+                            option-label="name"
+                            option-value="id"
+                            searchable
+                            single
+                        />
+                        <x-textarea label="Note" wire:model="note" rows="3" />
                     </div>
-                </div>
+                </x-card>
+                <x-card class="border border-base-300">
+                    <div>
+                        <div class="font-normal text-xl">TOTAL :</div>
+                        <div class="text-4xl font-semibold">{{ number_format($total, 0, ',', '.') }}</div>
+                    </div>
+                </x-card>
             </div>
-        </x-card>
 
         {{-- Order Details --}}
         <x-card class="border border-base-300">
@@ -180,19 +206,22 @@ new class extends Component {
                     <div class="px-4 pt-2 pb-4 bg-gray-50 dark:bg-base-200 first:rounded-t-lg last:rounded-b-lg">
                         <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2">
                             <div class="lg:col-span-5">
-                                <x-select
+                                <x-choices
                                     label="Product"
                                     wire:model.live="details.{{ $index }}.product_id"
                                     :options="$products"
+                                    search-function="searchProduct"
                                     option-label="name"
                                     option-value="id"
                                     placeholder="Select product"
+                                    searchable
+                                    single
                                 />
                             </div>
                             <div class="lg:col-span-2">
                                 <x-input
                                     label="Price"
-                                    wire:model.live="details.{{ $index }}.price"
+                                    wire:model.live.debounce.500ms="details.{{ $index }}.price"
                                     type="number"
                                     step="0.01"
                                     min="0"
@@ -201,7 +230,7 @@ new class extends Component {
                             <div class="lg:col-span-2">
                                 <x-input
                                     label="Qty"
-                                    wire:model.live="details.{{ $index }}.qty"
+                                    wire:model.live.debounce.500ms="details.{{ $index }}.qty"
                                     type="number"
                                     min="1"
                                 />
@@ -235,6 +264,7 @@ new class extends Component {
                 @enderror
             </div>
         </x-card>
+        </div>
 
         <x-slot:actions>
             <x-button label="Cancel" link="{{ route('order.index') }}" />

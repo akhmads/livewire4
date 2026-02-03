@@ -146,7 +146,7 @@ new class extends Component
                         </div>
                         @if(isset($notification['data']['action_url']))
                         <div>
-                            <a href="{{ $notification['data']['action_url'] }}" class="btn btn-xs {{ $notification['read_at'] ? 'text-gray-400!' : 'btn-primary btn-soft' }}">
+                            <a href="{{ $notification['data']['action_url'] }}" wire:navigate class="btn btn-xs {{ $notification['read_at'] ? 'text-gray-400!' : 'btn-primary btn-soft' }}">
                                 {{ $notification['data']['action_text'] ?? 'View' }}
                             </a>
                         </div>
