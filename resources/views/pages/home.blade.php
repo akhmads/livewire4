@@ -40,7 +40,7 @@ new class extends Component {
 
         for ($i = 11; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
-            $monthName = $date->format('M Y');
+            $monthName = $date->format('M y');
 
             $profit = Order::where('status', OrderStatus::Delivered->value)
                 ->whereYear('date', $date->year)
