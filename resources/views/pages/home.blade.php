@@ -156,10 +156,10 @@ new class extends Component {
 
     public function topCustomers(): array
     {
-        return Contact::select('contacts.*', DB::raw('COUNT(orders.id) as total_orders'), DB::raw('SUM(orders.total) as total_spent'))
+        return Contact::select('contacts.id', 'contacts.name', 'contacts.email', DB::raw('COUNT(orders.id) as total_orders'), DB::raw('SUM(orders.total) as total_spent'))
             ->join('orders', 'contacts.id', '=', 'orders.contact_id')
             ->where('orders.status', OrderStatus::Delivered->value)
-            ->groupBy('contacts.id')
+            ->groupBy('contacts.id', 'contacts.name', 'contacts.email')
             ->orderByDesc('total_spent')
             ->limit(5)
             ->get()
@@ -168,11 +168,11 @@ new class extends Component {
 
     public function bestSellerProducts(): array
     {
-        return OrderDetail::select('products.*', DB::raw('SUM(order_details.qty) as total_sold'), DB::raw('SUM(order_details.subtotal) as total_revenue'))
+        return OrderDetail::select('products.id', 'products.code', 'products.name', DB::raw('SUM(order_details.qty) as total_sold'), DB::raw('SUM(order_details.subtotal) as total_revenue'))
             ->join('products', 'order_details.product_id', '=', 'products.id')
             ->join('orders', 'order_details.order_id', '=', 'orders.id')
             ->where('orders.status', OrderStatus::Delivered->value)
-            ->groupBy('products.id')
+            ->groupBy('products.id', 'products.code', 'products.name')
             ->orderByDesc('total_sold')
             ->limit(5)
             ->get()
