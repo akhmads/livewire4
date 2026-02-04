@@ -17,6 +17,9 @@ new class extends Component {
     #[Session(key: 'order_code')]
     public string $code = '';
 
+    #[Session(key: 'order_status')]
+    public string $status = '';
+
     public int $filterCount = 0;
     public bool $drawer = false;
     public array $sortBy = ['column' => 'created_at', 'direction' => 'desc'];
@@ -45,6 +48,7 @@ new class extends Component {
         ->with('contact')
         ->orderBy(...array_values($this->sortBy))
         ->when($this->code, fn($query) => $query->where('code', 'like', '%'.$this->code.'%'))
+        ->when($this->status, fn($query) => $query->where('status', $this->status))
         ->paginate($this->perPage);
     }
 
@@ -68,13 +72,14 @@ new class extends Component {
     {
         $this->validate([
             'code' => 'nullable',
+            'status' => 'nullable',
         ]);
     }
 
     public function clear(): void
     {
         $this->success('Filters cleared.');
-        $this->reset(['code']);
+        $this->reset(['code', 'status']);
         $this->resetPage();
         $this->updateFilterCount();
         $this->drawer = false;
@@ -84,12 +89,20 @@ new class extends Component {
     {
         $count = 0;
         if (!empty($this->code)) $count++;
+        if (!empty($this->status)) $count++;
         $this->filterCount = $count;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+        $this->resetPage();
+        $this->updateFilterCount();
     }
 
     public function delete(Order $order): void
     {
-        $this->authorize('delete orders');
+        $this->authorize('orders.delete');
         $order->details()->delete();
         $order->delete();
         $this->success('Order successfully deleted.');
@@ -106,6 +119,15 @@ new class extends Component {
             @endcan
         </x-slot:actions>
     </x-header>
+
+    {{-- TABS --}}
+    <div role="tablist" class="tabs tabs-border mb-4 justify-center">
+        <a role="tab" class="tab {{ $status === '' ? 'tab-active' : '' }}" wire:click="setStatus('')">All</a>
+        <a role="tab" class="tab {{ $status === 'new' ? 'tab-active' : '' }}" wire:click="setStatus('new')">New</a>
+        <a role="tab" class="tab {{ $status === 'processing' ? 'tab-active' : '' }}" wire:click="setStatus('processing')">Processing</a>
+        <a role="tab" class="tab {{ $status === 'delivered' ? 'tab-active' : '' }}" wire:click="setStatus('delivered')">Delivered</a>
+        <a role="tab" class="tab {{ $status === 'cancelled' ? 'tab-active' : '' }}" wire:click="setStatus('cancelled')">Cancelled</a>
+    </div>
 
     {{-- TABLE --}}
     <x-card wire:loading.class="bg-slate-200/50 text-slate-400" class="border border-base-300">

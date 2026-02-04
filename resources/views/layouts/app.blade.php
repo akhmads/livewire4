@@ -14,6 +14,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
 
+    {{-- Chart.js --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -72,7 +75,10 @@
                 <h2 class="menu-title mt-4">Shop</h2>
                 <x-menu-item title="Contacts" icon="o-identification" link="{{ route('contact.index') }}" :hidden="auth()->user()->cannot('contacts.view')" />
                 <x-menu-item title="Products" icon="o-cube" link="{{ route('product.index') }}" :hidden="auth()->user()->cannot('products.view')" />
-                <x-menu-item title="Orders" icon="o-shopping-cart" link="{{ route('order.index') }}" :hidden="auth()->user()->cannot('orders.view')" />
+                @php
+                    $newOrdersCount = auth()->user()->can('orders.view') ? \App\Models\Order::where('status', \App\Enums\OrderStatus::New)->count() : 0;
+                @endphp
+                <x-menu-item title="Orders" icon="o-shopping-cart" link="{{ route('order.index') }}" :hidden="auth()->user()->cannot('orders.view')" badge="{{ $newOrdersCount > 0 ? $newOrdersCount : '' }}" badge-classes="badge-info float-right" />
 
                 <h2 class="menu-title mt-4">System</h2>
                 <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" :hidden="auth()->user()->cannot('users.view')" />

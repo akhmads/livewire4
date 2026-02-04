@@ -188,12 +188,14 @@ new class extends Component {
                         <x-textarea label="Note" wire:model="note" rows="3" class="lg:col-span-2" />
                     </div>
                 </x-card>
-                <x-card class="border border-base-300">
-                    <div>
-                        <div class="font-normal text-xl">TOTAL :</div>
-                        <div class="text-4xl font-semibold">{{ number_format($total, 0, ',', '.') }}</div>
-                    </div>
-                </x-card>
+                <div>
+                    <x-card class="border border-base-300">
+                        <div>
+                            <div class="font-semibold text-xl text-gray-500 dark:text-gray-300">TOTAL :</div>
+                            <div class="text-4xl font-semibold text-blue-800 dark:text-blue-400">{{ number_format($total, 2, ',', '.') }}</div>
+                        </div>
+                    </x-card>
+                </div>
             </div>
 
         {{-- Order Details --}}

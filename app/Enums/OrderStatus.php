@@ -6,7 +6,6 @@ enum OrderStatus: string
 {
     case New = 'new';
     case Processing = 'processing';
-    case Shipped = 'shipped';
     case Delivered = 'delivered';
     case Cancelled = 'cancelled';
 
@@ -15,7 +14,6 @@ enum OrderStatus: string
         return match ($this) {
             self::New => 'New',
             self::Processing => 'Processing',
-            self::Shipped => 'Shipped',
             self::Delivered => 'Delivered',
             self::Cancelled => 'Cancelled',
         };
@@ -26,7 +24,6 @@ enum OrderStatus: string
         return match ($this) {
             self::New => 'badge-info text-white',
             self::Processing => 'badge-warning text-white',
-            self::Shipped => 'badge-success text-white',
             self::Delivered => 'badge-success text-white',
             self::Cancelled => 'badge-error text-white',
         };

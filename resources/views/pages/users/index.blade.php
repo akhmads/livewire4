@@ -171,7 +171,7 @@ new class extends Component {
     <x-filter-drawer>
         <x-input label="Name" wire:model="name" />
         <x-input label="Email" wire:model="email" />
-        <x-choices-offline label="Timezone" :options="$this->timezoneFilterOptions()" wire:model="timezone" searchable />
+        <x-choices-offline label="Timezone" :options="$this->timezoneFilterOptions()" wire:model="timezone" searchable single />
         <x-select label="Is Active" wire:model="is_active" :options="\App\Enums\ActiveStatus::toSelect()" placeholder="-- All --" />
     </x-filter-drawer>
 </div>
