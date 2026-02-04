@@ -69,7 +69,7 @@
             <x-menu activate-by-route class="text-[13px] font-light">
                 <x-menu-item title="Home" icon="o-home" link="{{ route('home') }}" />
 
-                <h2 class="menu-title mt-4">Poit Of Sales</h2>
+                <h2 class="menu-title mt-4">Shop</h2>
                 <x-menu-item title="Contacts" icon="o-identification" link="{{ route('contact.index') }}" :hidden="auth()->user()->cannot('contacts.view')" />
                 <x-menu-item title="Products" icon="o-cube" link="{{ route('product.index') }}" :hidden="auth()->user()->cannot('products.view')" />
                 <x-menu-item title="Orders" icon="o-shopping-cart" link="{{ route('order.index') }}" :hidden="auth()->user()->cannot('orders.view')" />
