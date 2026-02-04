@@ -68,16 +68,18 @@
             {{-- MENU --}}
             <x-menu activate-by-route class="text-[13px] font-light">
                 <x-menu-item title="Home" icon="o-home" link="{{ route('home') }}" />
+
+                <h2 class="menu-title mt-4">Poit Of Sales</h2>
                 <x-menu-item title="Contacts" icon="o-identification" link="{{ route('contact.index') }}" :hidden="auth()->user()->cannot('contacts.view')" />
                 <x-menu-item title="Products" icon="o-cube" link="{{ route('product.index') }}" :hidden="auth()->user()->cannot('products.view')" />
                 <x-menu-item title="Orders" icon="o-shopping-cart" link="{{ route('order.index') }}" :hidden="auth()->user()->cannot('orders.view')" />
-                <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" :hidden="auth()->user()->cannot('users.view')" />
 
+                <h2 class="menu-title mt-4">System</h2>
+                <x-menu-item title="Users" icon="o-users" link="{{ route('users.index') }}" :hidden="auth()->user()->cannot('users.view')" />
                 <x-menu-sub title="Queue Monitor" icon="o-bolt">
                     <x-menu-item title="Job History" icon="o-queue-list" link="{{ route('queue.jobs') }}" :hidden="auth()->user()->cannot('queue.view')" />
                     <x-menu-item title="Failed Jobs" icon="o-x-circle" link="{{ route('queue.failed') }}" :hidden="auth()->user()->cannot('queue.view')" />
                 </x-menu-sub>
-
                 <x-menu-sub title="Access Control" icon="o-shield-check">
                     <x-menu-item title="Permissions" icon="o-key" link="{{ route('permissions.index') }}" :hidden="auth()->user()->cannot('permissions.view')" />
                     <x-menu-item title="Roles" icon="o-user-group" link="{{ route('roles.index') }}" :hidden="auth()->user()->cannot('roles.view')" />
