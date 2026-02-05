@@ -27,6 +27,7 @@ new class extends Component {
     {
         Gate::authorize('orders.create');
         $this->date = now()->format('Y-m-d');
+
         $this->searchContact();
         $this->addDetail();
     }
@@ -83,13 +84,15 @@ new class extends Component {
 
     public function searchContact($value = ''): void
     {
+        $selectedOption = Contact::where('id', $this->contact_id)->get();
         $this->contacts = Contact::query()
             ->where('name', 'like', '%' . $value . '%')
             ->orWhere('email', 'like', '%' . $value . '%')
             ->orWhere('phone', 'like', '%' . $value . '%')
             ->orderBy('name')
             ->limit(20)
-            ->get();
+            ->get()
+            ->merge($selectedOption);
     }
 
     public function searchProduct($value = '', $index = null): void

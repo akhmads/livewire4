@@ -28,13 +28,15 @@ new class extends Component {
     public function mount(): void
     {
         Gate::authorize('orders.edit');
-        $this->searchContact();
 
-        $this->code = $this->order->code;
+        $this->fill($this->order);
+        //$this->code = $this->order->code;
         $this->date = $this->order->date?->format('Y-m-d');
-        $this->contact_id = $this->order->contact_id;
+        //$this->contact_id = $this->order->contact_id;
         $this->status = $this->order->status->value;
-        $this->note = $this->order->note;
+        //$this->note = $this->order->note;
+
+        $this->searchContact();
 
         // Load existing details
         $this->details = $this->order->details->map(function($detail) {
@@ -115,13 +117,15 @@ new class extends Component {
 
     public function searchContact($value = ''): void
     {
+        $selectedOption = Contact::where('id', $this->contact_id)->get();
         $this->contacts = Contact::query()
             ->where('name', 'like', '%' . $value . '%')
             ->orWhere('email', 'like', '%' . $value . '%')
             ->orWhere('phone', 'like', '%' . $value . '%')
             ->orderBy('name')
             ->limit(20)
-            ->get();
+            ->get()
+            ->merge($selectedOption);
     }
 
     public function searchProduct($value = '', $index = null): void
