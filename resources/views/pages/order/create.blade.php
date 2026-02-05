@@ -27,7 +27,6 @@ new class extends Component {
     {
         Gate::authorize('orders.create');
         $this->date = now()->format('Y-m-d');
-        $this->searchProduct();
         $this->searchContact();
         $this->addDetail();
     }
@@ -40,6 +39,8 @@ new class extends Component {
             'qty' => 1,
             'subtotal' => 0,
         ];
+
+        $this->searchProduct('', count($this->details) - 1);
     }
 
     public function removeDetail($index): void
@@ -91,14 +92,31 @@ new class extends Component {
             ->get();
     }
 
-    public function searchProduct($value = ''): void
+    public function searchProduct($value = '', $index = null): void
     {
-        $this->products = Product::query()
+        // Jika index tidak ada, return early
+        if ($index === null) {
+            return;
+        }
+
+        // Load selected product jika ada
+        $selectedProduct = [];
+        if (!empty($this->details[$index]['product_id'])) {
+            $selected = Product::find($this->details[$index]['product_id']);
+            if ($selected) {
+                $selectedProduct = [$selected];
+            }
+        }
+
+        $this->products[$index] = Product::query()
             ->where('is_active', true)
             ->where('name', 'like', '%' . $value . '%')
             ->orderBy('name')
             ->limit(20)
-            ->get();
+            ->get()
+            ->merge($selectedProduct)
+            ->unique('id')
+            ->values();
     }
 
     public function save(): void
@@ -220,8 +238,8 @@ new class extends Component {
                                 <x-choices
                                     label="Product"
                                     wire:model.live="details.{{ $index }}.product_id"
-                                    :options="$products"
-                                    search-function="searchProduct"
+                                    :options="$products[$index] ?? []"
+                                    search-function="searchProduct({{ $index }})"
                                     option-label="name"
                                     option-value="id"
                                     placeholder="Select product"

@@ -28,7 +28,6 @@ new class extends Component {
     public function mount(): void
     {
         Gate::authorize('orders.edit');
-        $this->searchProduct();
         $this->searchContact();
 
         $this->code = $this->order->code;
@@ -52,11 +51,18 @@ new class extends Component {
             $this->addDetail();
         }
 
+        // Load products for each detail
+        foreach($this->details as $index => $detail) {
+            $this->searchProduct('', $index);
+        }
+
         $this->calculateTotal();
     }
 
     public function addDetail(): void
     {
+        $index = count($this->details);
+
         $this->details[] = [
             'id' => null,
             'product_id' => '',
@@ -64,6 +70,9 @@ new class extends Component {
             'qty' => 1,
             'subtotal' => 0,
         ];
+
+        // Load products untuk detail baru
+        $this->searchProduct('', $index);
     }
 
     public function removeDetail($index): void
@@ -115,14 +124,31 @@ new class extends Component {
             ->get();
     }
 
-    public function searchProduct($value = ''): void
+    public function searchProduct($value = '', $index = null): void
     {
-        $this->products = Product::query()
+        // Jika index tidak ada, return early
+        if ($index === null) {
+            return;
+        }
+
+        // Load selected product jika ada
+        $selectedProduct = [];
+        if (!empty($this->details[$index]['product_id'])) {
+            $selected = Product::find($this->details[$index]['product_id']);
+            if ($selected) {
+                $selectedProduct = [$selected];
+            }
+        }
+
+        $this->products[$index] = Product::query()
             ->where('is_active', true)
             ->where('name', 'like', '%' . $value . '%')
             ->orderBy('name')
             ->limit(20)
-            ->get();
+            ->get()
+            ->merge($selectedProduct)
+            ->unique('id')
+            ->values();
     }
 
     public function save(): void
@@ -262,8 +288,8 @@ new class extends Component {
                                     <x-choices
                                         label="Product"
                                         wire:model.live="details.{{ $index }}.product_id"
-                                        :options="$products"
-                                        search-function="searchProduct"
+                                        :options="$products[$index] ?? []"
+                                        search-function="searchProduct({{ $index }})"
                                         option-label="name"
                                         option-value="id"
                                         placeholder="Select product"
