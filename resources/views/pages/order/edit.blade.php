@@ -332,6 +332,7 @@ new class extends Component {
                                     <x-button
                                         icon="o-trash"
                                         wire:click="removeDetail({{ $index }})"
+                                        spinner="removeDetail({{ $index }})"
                                         class="btn-ghost btn-sm text-error"
                                         wire:confirm="Remove this item?"
                                     />
